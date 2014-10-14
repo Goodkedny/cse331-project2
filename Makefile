@@ -28,13 +28,13 @@ CPP = clang++ --std=c++11
 CPPFLAGS   = -g -Wall -Wextra
 CPPFLAGS  += $(FLAG)
 LIB       := -pthread
-INC       := -I include -I lib/optionparser -I lib/easylogging++
+INC       := -I include
 
 # Directories
 SRCDIR   := src
 BUILDDIR := build
 TESTDIR  := test
-TARGET   := bin
+TARGET   := bin/simulator
 TEST     := $(TARGET)_test
 
 # Auto-find source files and track them
