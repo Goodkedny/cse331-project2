@@ -38,7 +38,7 @@ TARGET   := bin/simulator
 TEST     := $(TARGET)_test
 
 # Auto-find source files and track them
-SRCEXT  := cc
+SRCEXT  := c
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 TESTSRC := $(shell find $(TESTDIR) -type f -name *.$(SRCEXT))
