@@ -20,13 +20,14 @@
 # LIB <- What library flags need to be given for linking.
 # INC <- What directories need to be included for header files?
 ################################################################################
+
 # Compilers
 CC  = clang
-CPP = clang++ --std=c++11
+CPP = clang++
 
 # Compiler Flags
-CPPFLAGS   = -g -Wall -Wextra
-CPPFLAGS  += $(FLAG)
+CFLAGS   = -g -Wall -Wextra
+CFLAGS  += $(FLAG)
 LIB       := -pthread
 INC       := -I include
 
@@ -38,12 +39,13 @@ TARGET   := bin/simulator
 TEST     := $(TARGET)_test
 
 # Auto-find source files and track them
-SRCEXT  := c
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-TESTSRC := $(shell find $(TESTDIR) -type f -name *.$(SRCEXT))
-TESTOBJ := $(patsubst $(TESTDIR)/%,$(BUILDDIR)/$(TESTDIR)/%,$(TESTSRC:.$(SRCEXT)=.o))
-DEP     := $(OBJECTS:%.o=%.d) $(TESTOBJ:%.o=%.d)
+CSRCEXT  := c
+CPPSRCEXT:= cc
+SOURCES  := $(shell find $(SRCDIR) -type f -name *.$(CSRCEXT))
+OBJECTS  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(CSRCEXT)=.o))
+TESTSRC  := $(shell find $(TESTDIR) -type f -name *.$(CPPSRCEXT))
+TESTOBJ  := $(patsubst $(TESTDIR)/%,$(BUILDDIR)/$(TESTDIR)/%,$(TESTSRC:.$(CPPSRCEXT)=.o))
+DEP      := $(OBJECTS:%.o=%.d) $(TESTOBJ:%.o=%.d)
 
 # Google Test Framework variable
 GTEST_DIR     = lib/gtest-1.7.0
@@ -64,12 +66,12 @@ all: $(TARGET)
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."
 	@mkdir -p $$(dirname $@)
-	$(CPP) $^ -o $(TARGET) $(LIB)
+	$(CC) $^ -o $(TARGET) $(LIB)
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(CSRCEXT)
 	@echo " Building $@..."
 	@mkdir -p $$(dirname $@)
-	$(CPP) $(CPPFLAGS) $(INC) -c -o $@ -MD -MP -MF ${@:.o=.d} $<
+	$(CC) $(CPPFLAGS) $(INC) -c -o $@ -MD -MP -MF ${@:.o=.d} $<
 
 test: $(TEST)
 	@echo " Running tests..."
@@ -80,7 +82,7 @@ $(TEST): $(TESTOBJ) $(OBJECTS) $(GTMAINA) $(LEX) $(PARSER)
 	@mkdir -p $$(dirname $@)
 	$(CPP) -lpthread $(LIB) $^ -o $@
 
-$(BUILDDIR)/$(TESTDIR)/%.o: $(TESTDIR)/%.$(SRCEXT) $(GTEST_HEADERS)
+$(BUILDDIR)/$(TESTDIR)/%.o: $(TESTDIR)/%.$(CPPSRCEXT) $(GTEST_HEADERS)
 	@echo " Building test $@..."
 	@mkdir -p $$(dirname $@)
 	$(CPP) $(CPPFLAGS) $(INC) -c -o $@ -MD -MP -MF ${@:.o=.d} $<
