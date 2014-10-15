@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include "cache.h"
 // 
 // Config file
 // Read line : Returns (Hit/Miss, store/load, instructions)
@@ -12,9 +13,14 @@
 //                     Store Hits, Simulated Clock Time)
 // Make output : Void, writes simulate results to file.
 
+SimResult simulate(char *trace);
+int print_results(FILE *fp);
+int build_config(char *config);
 
 int main(int argc, char *argv[])
 {
+  (void) argc;
+  (void) argv;
   printf("Cache Sim!\n");
   return 0;
 }
