@@ -11,7 +11,16 @@ typedef struct {
 } SimResult;
 
 int is_hit();
-int on_load_miss();
-int on_store_miss();
+int is_hit_direct();
+int is_hit_associative();
+
 SimResult sim_load();
+int on_load_miss();
+int load_random_replacement();
+int load_FIFO_replacement();
+
 SimResult sim_store();
+int on_store_miss();
+int store_no_write_allocate();
+// Call on_load_miss 
+int store_write_allocate();
