@@ -28,7 +28,7 @@ CPP = clang++
 # Compiler Flags
 CFLAGS   = -g -Wall -Wextra
 CFLAGS  += $(FLAG)
-LIB       := -pthread
+LIB       := -pthread -lm
 INC       := -I include
 
 # Directories

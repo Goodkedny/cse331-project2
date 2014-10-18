@@ -10,6 +10,18 @@ typedef struct {
   unsigned long instructions;
 } SimResult;
 
+typedef struct {
+  unsigned line_size;
+  unsigned associativity;
+  unsigned cache_size;
+  unsigned replacement_policy;
+  unsigned miss_penalty;
+  unsigned write_allocate;
+  unsigned tag_size;
+  unsigned num_sets;
+  unsigned offset_bits;
+} CacheConf;
+
 int is_hit();
 int is_hit_direct();
 int is_hit_associative();
