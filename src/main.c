@@ -5,17 +5,20 @@
 #include "cache.h"
 
 SimResult simulate(char *trace);
+
+
 int print_results(FILE *fp);
-CacheConf build_config(char *config);
 
 /**
- * Parses a configuration file and returns a CacheConf structure
- * filled with the gathered information
+ * Parses a configuration file and returns a CacheConf structure filled with the
+ * gathered information.
  *
  * @param config, the path to the config file to parse
  * @return populated cache configuration structure
  */
-CacheConf build_config(char *config) 
+CacheConf build_config(char *config);
+
+CacheConf build_config(char *config)
 {
   FILE *config_file;
   config_file = fopen(config, "r");
@@ -24,7 +27,7 @@ CacheConf build_config(char *config)
     fprintf(stderr, "Cannot open file.");
     exit(1);
   }
-  
+
   /*At this point we will assume the config file is valid*/
   CacheConf configuration;
   fscanf(config_file, "%u", &configuration.line_size);
@@ -38,8 +41,10 @@ CacheConf build_config(char *config)
   configuration.num_sets = configuration.cache_size / configuration.line_size;
   configuration.offset_bits = (int) log2(configuration.line_size);
 
-  /*We're using 32-bit addresses. To get tag length, subtract numsets and offset from 32*/
-  configuration.tag_size = 32 - configuration.num_sets - configuration.offset_bits;
+  /*We're using 32-bit addresses. To get tag length, subtract numsets and offset
+   from 32*/
+  configuration.tag_size = 32 - configuration.num_sets
+    - configuration.offset_bits;
 
   fclose(config_file);
   return configuration;
@@ -49,8 +54,15 @@ CacheConf build_config(char *config)
 
 int main(int argc, char *argv[])
 {
-  (void) argc;
-  (void) argv;
+  CacheConf cacheConf;
+
+  if(argc != 3) {
+    printf("Usage: sim <config_file> <trace_file>\n");
+    exit(1);
+  }
+
+  cacheConf = build_config(argv[1]);
   printf("Cache Sim!\n");
+  
   return 0;
 }

@@ -22,13 +22,13 @@
 ################################################################################
 
 # Compilers
-CC  = clang
+CC  = clang --std=c11
 CPP = clang++
 
 # Compiler Flags
 CFLAGS   = -g -Wall -Wextra
 CFLAGS  += $(FLAG)
-LIB       := -pthread -lm
+LIB       := -lm
 INC       := -I include
 
 # Directories
