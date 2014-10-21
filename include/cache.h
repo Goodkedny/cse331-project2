@@ -69,13 +69,7 @@ bool is_hit_associative(Cache* cache, int slots, Tag tag);
 /**
  *
  */
-int sim_load(Cache* cache, CacheConf *config, Tag tag, Index index);
-void on_load_miss(Cache* cache, CacheConf *config, Tag tag, Index index);
-void load_random_replacement(Cache* cache, int slots, Tag tag);
-void load_FIFO_replacement(Cache* cache, int slots, Tag tag);
-
-SimResult sim_store();
-int on_store_miss();
-int store_no_write_allocate();
-// Call on_load_miss
-int store_write_allocate();
+int sim(Cache* cache, CacheConf *config, Tag tag, Index index, bool read);
+void replacement(Cache* cache, CacheConf *config, Tag tag, Index index);
+void random_replacement(Cache* cache, int slots, Tag tag);
+void FIFO_replacement(Cache* cache, int slots, Tag tag);
