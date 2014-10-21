@@ -1,6 +1,8 @@
 #include "cache.h"
 #include "sim.h"
 
+#include <string.h>
+
 int main(int argc, char *argv[])
 {
   CacheConf cacheConf;
@@ -13,10 +15,16 @@ int main(int argc, char *argv[])
 
   cacheConf = build_config(argv[1]);
   results = simulate(&cacheConf, argv[2]);
-  
-  FILE *fp = fopen("out","w");
+ 
+
+  char *filename = malloc(strlen(argv[2]) + 5);
+  sprintf(filename, "%s.out", argv[2]);
+
+  FILE *fp = fopen(filename,"w");
   print_results(&cacheConf, results, fp);  
+ 
   fclose(fp);
+  free(filename);
 
   return 0;
 }
