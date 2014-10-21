@@ -2,16 +2,16 @@
 
 void print_results(CacheConf *config, SimResult results, FILE *fp) 
 {
-  int total_memory_accesses = results.load_total + results.store_total;
-  int total_hits = results.load_hit + results.store_hit;  
-  int store_misses = results.store_total - results.store_hit;
-  int load_misses = results.load_total - results.load_hit;
-  int total_miss_penalty = (store_misses + load_misses) * config->miss_penalty;
+  unsigned long total_memory_accesses = results.load_total + results.store_total;
+  unsigned long total_hits = results.load_hit + results.store_hit;  
+  unsigned long store_misses = results.store_total - results.store_hit;
+  unsigned long load_misses = results.load_total - results.load_hit;
+  unsigned long total_miss_penalty = (store_misses + load_misses) * config->miss_penalty;
 
   
   float total_hit_rate = (float) total_hits / total_memory_accesses;
-  float load_hit_rate = (float) results.load_hit/results.load_total;
-  float store_hit_rate = (float) results.store_hit/results.store_total;
+  float load_hit_rate = (float) results.load_hit / (float) results.load_total;
+  float store_hit_rate = (float) results.store_hit / results.store_total;
   float average_memory_access_latency = (float) (total_miss_penalty + total_hits)/ total_memory_accesses;
 
   fprintf(fp, "%f\n", total_hit_rate);
@@ -25,7 +25,13 @@ SimResult simulate(CacheConf *config, char *trace)
 {
   /*2-4-6-8 Show me how you simultate!*/
   SimResult result;
-  Cache *cache = malloc(sizeof(Cache) * config->num_sets);
+  result.load_hit = 0;
+  result.store_hit = 0;
+  result.load_total = 0;
+  result.store_total = 0;
+  result.instructions = 0;
+
+  Cache *cache = malloc(sizeof(Cache)*config->cache_size);
 
   FILE *trace_file;
   trace_file = fopen(trace, "r");
@@ -50,15 +56,15 @@ SimResult simulate(CacheConf *config, char *trace)
 
     /*Calculate the tag and the index and simulate the instruction*/
     sim_result = sim(cache, config, calculate_tag(config, address), 
-	calculate_index(config, address), inst_type == 'l');
+		     calculate_index(config, address), inst_type == 'l');
     
     /*Add the result of the instruction to the count*/
     if (inst_type == 'l') {
-      result.load_hit += 1 - sim_result;
+      result.load_hit += (1 - sim_result);
       result.load_total++;
     }
     else {
-      result.store_hit += 1 - sim_result;
+      result.store_hit += (1 - sim_result);
       result.store_total++;
     }
     

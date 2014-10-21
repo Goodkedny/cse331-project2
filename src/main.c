@@ -20,9 +20,9 @@ int main(int argc, char *argv[])
   char *filename = malloc(strlen(argv[2]) + 5);
   sprintf(filename, "%s.out", argv[2]);
 
-  FILE *fp = fopen(filename,"w");
+  FILE *fp = fopen(filename, "w");
   print_results(&cacheConf, results, fp);  
- 
+  
   fclose(fp);
   free(filename);
 
