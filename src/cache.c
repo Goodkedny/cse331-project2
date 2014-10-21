@@ -21,7 +21,11 @@ bool is_hit_direct(Cache* cache, Tag tag, Index index) {
 bool is_hit_associative(Cache* cache, int associativity, int setsize, Tag tag,
                         Index index) {
   /* Searches through all cache blocks. */
-  for(int i = 0; i < (associativity == 1 ? setsize : associativity); i++)
+  if (associativity == 1) {
+    index = 0;
+  }
+
+  for(int i = 0; i < setsize; i++)
   {
     if(cache[index * associativity + i].tag == tag &&
        cache[index * associativity + i].valid) {
@@ -66,6 +70,10 @@ void random_replacement(Cache* cache, int associativity, int setsize, Tag tag,
                         Index index) {
   unsigned int offset = rand() % setsize;
 
+  if (associativity == 1) {
+    index = 0;
+  }
+
   cache[index * associativity + offset].tag = tag;
   cache[index * associativity + offset].valid = true;
 }
@@ -73,6 +81,11 @@ void random_replacement(Cache* cache, int associativity, int setsize, Tag tag,
 void FIFO_replacement(Cache* cache, int associativity, int setsize, Tag tag,
                       Index index) {
   static unsigned int count = 0;
+
+  if (associativity == 1) {
+    index = 0;
+  }
+ 
 
   cache[index * associativity + count].tag = tag;
   cache[index * associativity + count].valid = true;
