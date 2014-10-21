@@ -106,6 +106,11 @@ Tag calculate_tag(CacheConf *config, unsigned int address)
 
 Index calculate_index(CacheConf *config, unsigned int address)
 {
+
+  if ((config->tag_size + config->offset_bits) == 32) {
+    return 0;
+  }
+
   address <<= config->tag_size;
   return address >> (config->offset_bits + config->tag_size);
 }
@@ -139,7 +144,7 @@ CacheConf build_config(char *config)
   else if (configuration.associativity > 1) {
     configuration.set_size =
       (configuration.associativity > configuration.num_sets) ?
-      configuration.associativity :  configuration.num_sets;
+      configuration.num_sets:configuration.associativity;
   }
   else {
     configuration.set_size = 1;
@@ -148,8 +153,17 @@ CacheConf build_config(char *config)
   /*We're using 32-bit addresses. To get tag length, subtract numsets and offset
    from 32*/
 
-  configuration.tag_size = 32 - log2((float)configuration.num_sets/(configuration.associativity ? configuration.associativity:1))
-      - configuration.offset_bits;
+  float ratio = configuration.num_sets / configuration.set_size;
+  int index_size = 0;
+
+  if(ratio < 1) {
+    index_size = 0;
+  } else {
+    index_size = (int) ceil(log2(ratio));
+  }
+  
+
+  configuration.tag_size = 32 - index_size - configuration.offset_bits;
 
   fclose(config_file);
   return configuration;
