@@ -118,8 +118,10 @@ CacheConf build_config(char *config)
 
   /*We're using 32-bit addresses. To get tag length, subtract numsets and offset
    from 32*/
-  configuration.tag_size = 32 - configuration.num_sets
-    - configuration.offset_bits;
+
+  configuration.tag_size = 32 - log2(configuration.num_sets/(configuration.associativity ? configuration.associativity:1))
+      - configuration.offset_bits;
+
 
   fclose(config_file);
   return configuration;
