@@ -25,11 +25,22 @@ SimResult simulate(CacheConf *config, char *trace)
   char inst_type;
   unsigned int address;
   int inst_since_last;
+  int sim_result;
   while(fgets(buffer, 100, trace_file)) {
     sscanf(buffer, "%c %x %d", &inst_type, &address, &inst_since_last);
-    sim(cache, config, calculate_tag(config, address), 
-	calculate_index(config, address), inst_type == 'r');
-
+    sim_result = sim(cache, config, calculate_tag(config, address), 
+	calculate_index(config, address), inst_type == 'l');
+    
+    if (inst_type == 'l') {
+      result.load_hit += 1 - sim_result;
+      result.load_total++;
+    }
+    else {
+      result.store_hit += 1 - sim_result;
+      result.store_total++;
+    }
+    
+    result.instructions += inst_since_last;
   }
 
   fclose(trace_file);
