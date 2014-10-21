@@ -19,6 +19,6 @@ namespace {
     CacheConf conf;
     conf.tag_size = 8;
     conf.offset_bits = 16;
-    ASSERT_EQ(0xDD, 0xFFDDCCCC);
+    ASSERT_EQ(0xDD, calculate_index(&conf, 0xFFDDCCCC));
   }
 }
