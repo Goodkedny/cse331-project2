@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "cache.h"
 
@@ -35,7 +36,7 @@ int sim(Cache* cache, CacheConf *config, Tag tag, Index index, bool read) {
 
   if(!is_hit(cache, config->associativity, config->set_size, tag, index)) {
     /* We have a miss. Need to handle replacement. */
-    if(!read || config->write_allocate) {
+    if(read || config->write_allocate) {
       replacement(cache, config, tag, index);
     }
     misses = 1;
@@ -45,14 +46,14 @@ int sim(Cache* cache, CacheConf *config, Tag tag, Index index, bool read) {
 }
 
 void replacement(Cache* cache, CacheConf *config, Tag tag, Index index) {
-  if(config->associativity) {
+  if(!config->associativity) {
     /* Direct mapped just writes. */
     cache[index].tag = tag;
     cache[index].valid = true;
     return;
   }
 
-  if(config->replacement_policy) {
+  if(!config->replacement_policy) {
     FIFO_replacement(cache, config->associativity, config->set_size, tag,
                      index);
   } else {
