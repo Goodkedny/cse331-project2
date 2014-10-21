@@ -14,10 +14,10 @@ void print_results(CacheConf *config, SimResult results, FILE *fp)
   float store_hit_rate = (float) results.store_hit / results.store_total;
   float average_memory_access_latency = (float) (total_miss_penalty + total_hits)/ total_memory_accesses;
 
-  fprintf(fp, "%f\n", total_hit_rate);
-  fprintf(fp, "%f\n", load_hit_rate);
-  fprintf(fp, "%f\n", store_hit_rate);
-  fprintf(fp, "%lu\n", results.instructions);
+  fprintf(fp, "%f,", total_hit_rate);
+  fprintf(fp, "%f,", load_hit_rate);
+  fprintf(fp, "%f,", store_hit_rate);
+  fprintf(fp, "%lu,", results.instructions);
   fprintf(fp, "%f\n", average_memory_access_latency);
 }
 
@@ -116,12 +116,21 @@ CacheConf build_config(char *config)
   configuration.num_sets = configuration.cache_size / configuration.line_size;
   configuration.offset_bits = (int) log2(configuration.line_size);
 
+  if (configuration.associativity == 1) {
+    configuration.set_size = configuration.num_sets;
+  }
+  else if (configuration.associativity > 1) {
+    configuration.set_size = configuration.associativity;
+  }
+  else {
+    configuration.set_size = 1;
+  }
+
   /*We're using 32-bit addresses. To get tag length, subtract numsets and offset
    from 32*/
 
-  configuration.tag_size = 32 - log2(configuration.num_sets/(configuration.associativity ? configuration.associativity:1))
+  configuration.tag_size = 32 - log2((float)configuration.num_sets/(configuration.associativity ? configuration.associativity:1))
       - configuration.offset_bits;
-
 
   fclose(config_file);
   return configuration;
