@@ -28,6 +28,7 @@ typedef struct {
   unsigned tag_size;
   unsigned num_sets;
   unsigned offset_bits;
+  unsigned set_size;
 } CacheConf;
 
 /**
@@ -44,7 +45,7 @@ typedef struct {
  *
  * @return If the memory was in cache or not.
  */
-bool is_hit(Cache* cache, bool direct_mapped, int setsize, Tag tag,
+bool is_hit(Cache* cache, int associativity, int setsize, Tag tag,
             Index index);
 
 /**
@@ -67,12 +68,15 @@ bool is_hit_direct(Cache* cache, Tag tag, Index index);
  *
  * @return If the memory was in cache or not.
  */
-bool is_hit_associative(Cache* cache, int setsize, Tag tag, Index index);
+bool is_hit_associative(Cache* cache, int associativity, int setsize, Tag tag,
+                        Index index);
 
 /**
  *
  */
 int sim(Cache* cache, CacheConf *config, Tag tag, Index index, bool read);
 void replacement(Cache* cache, CacheConf *config, Tag tag, Index index);
-void random_replacement(Cache* cache, int setsize, Tag tag, Index index);
-void FIFO_replacement(Cache* cache, int setsize, Tag tag, Index index);
+void random_replacement(Cache* cache, int associativity,
+                        int setsize, Tag tag, Index index);
+void FIFO_replacement(Cache* cache, int associativity,
+                      int setsize, Tag tag, Index index);
