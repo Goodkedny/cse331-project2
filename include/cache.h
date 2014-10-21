@@ -7,6 +7,7 @@ typedef unsigned int Tag;
 typedef struct {
   Tag tag;
   bool valid;
+  bool dirty;
 }Cache;
 
 typedef struct {
