@@ -66,10 +66,13 @@ bool is_hit_direct(Cache* cache, Tag tag, Index index);
  */
 bool is_hit_associative(Cache* cache, int slots, Tag tag);
 
-SimResult sim_load();
-int on_load_miss();
-int load_random_replacement();
-int load_FIFO_replacement();
+/**
+ *
+ */
+int sim_load(Cache* cache, CacheConf *config, Tag tag, Index index);
+void on_load_miss(Cache* cache, CacheConf *config, Tag tag, Index index);
+void load_random_replacement(Cache* cache, int slots, Tag tag);
+void load_FIFO_replacement(Cache* cache, int slots, Tag tag);
 
 SimResult sim_store();
 int on_store_miss();
