@@ -12,6 +12,13 @@ namespace {
   TEST(TagTest) {
     CacheConf conf;
     conf.tag_size = 8;
-    ASSERT_EQ(0xFF, calculate_tag(&conf, 0xFF000000));
+    ASSERT_EQ(0xFF, calculate_tag(&conf, 0xFFCCCCCC));
+  }
+  
+  TEST(IndexTest) {
+    CacheConf conf;
+    conf.tag_size = 8;
+    conf.offset_bits = 16;
+    ASSERT_EQ(0xDD, 0xFFDDCCCC);
   }
 }
