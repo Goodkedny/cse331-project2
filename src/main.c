@@ -42,6 +42,7 @@ void print_results(SimResult results, FILE *fp);
 
 SimResult simulate(CacheConf *config, char *trace) 
 {
+  /*2-4-6-8 Show me how you simultate!*/
   SimResult result;
   Cache *cache = malloc(sizeof(Cache) * config->num_sets);
 
@@ -53,16 +54,24 @@ SimResult simulate(CacheConf *config, char *trace)
     exit(1);
   }
 
-  char buffer[100];
+  /*We now assume that the file is valid*/
+  /*For each instruction simulation we need the following variables*/
   char inst_type;
   unsigned int address;
   int inst_since_last;
   int sim_result;
+    
+
+  char buffer[100];
   while(fgets(buffer, 100, trace_file)) {
+    /*Read a formatted line from the trace file*/
     sscanf(buffer, "%c %x %d", &inst_type, &address, &inst_since_last);
+
+    /*Calculate the tag and the index and simulate the instruction*/
     sim_result = sim(cache, config, calculate_tag(config, address), 
 	calculate_index(config, address), inst_type == 'l');
     
+    /*Add the result of the instruction to the count*/
     if (inst_type == 'l') {
       result.load_hit += 1 - sim_result;
       result.load_total++;
@@ -72,7 +81,12 @@ SimResult simulate(CacheConf *config, char *trace)
       result.store_total++;
     }
     
-    result.instructions += inst_since_last;
+    /*Add the miss penalty*/
+    if (sim_result) {
+      result.instructions += config->miss_penalty;
+    }
+
+    result.instructions += inst_since_last + 1;
   }
 
   fclose(trace_file);
