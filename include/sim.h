@@ -28,10 +28,19 @@
  * gathered information.
  *
  * @param config, the path to the config file to parse
+ *
  * @return populated cache configuration structure
  */
 CacheConf build_config(char *config);
 
+/**
+ * Runs a whole simulation and returns the simulation results.
+ *
+ * @param config Configuration of the cache to simulate.
+ * @param trace Name of trace file to simulate.
+ *
+ * @return results about the simulation. See SimResult struct.
+ */
 SimResult simulate(CacheConf *config, char *trace);
 
 /**
@@ -39,6 +48,7 @@ SimResult simulate(CacheConf *config, char *trace);
  *
  * @param config, the configuration of the cache.
  * @param address, the address to extract the tag from.
+ *
  * @return the tag
  */
 Tag calculate_tag(CacheConf *config, unsigned int address);
@@ -48,6 +58,7 @@ Tag calculate_tag(CacheConf *config, unsigned int address);
  *
  * @param config, the configuration of the cache.
  * @param address, the address to extract the index from.
+ *
  * @return the index
  */
 Index calculate_index(CacheConf *config, unsigned int address);
