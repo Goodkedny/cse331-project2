@@ -31,25 +31,16 @@ int main(int argc, char *argv[])
 
   cacheConf = build_config(argv[1]);
   results = simulate(&cacheConf, argv[2]);
-<<<<<<< HEAD
- 
-=======
 
-
->>>>>>> d1b1713616277eb84a8bd5be25dfab0448083454
   char *filename = malloc(strlen(argv[2]) + 5);
   sprintf(filename, "%s.out", argv[2]);
 
   FILE *fp = fopen(filename, "w");
-<<<<<<< HEAD
+
   fprintf(fp, argv[2]);
   fprintf(fp,",");
   print_results(&cacheConf, results, fp);  
-  
-=======
-  print_results(&cacheConf, results, fp);
 
->>>>>>> d1b1713616277eb84a8bd5be25dfab0448083454
   fclose(fp);
   free(filename);
 
