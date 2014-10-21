@@ -137,7 +137,9 @@ CacheConf build_config(char *config)
     configuration.set_size = configuration.num_sets;
   }
   else if (configuration.associativity > 1) {
-    configuration.set_size = configuration.associativity;
+    configuration.set_size =
+      (configuration.associativity > configuration.num_sets) ?
+      configuration.associativity :  configuration.num_sets;
   }
   else {
     configuration.set_size = 1;
