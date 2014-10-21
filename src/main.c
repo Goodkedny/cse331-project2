@@ -4,6 +4,7 @@
 int main(int argc, char *argv[])
 {
   CacheConf cacheConf;
+  SimResult results;
 
   if(argc != 3) {
     printf("Usage: sim <config_file> <trace_file>\n");
@@ -11,8 +12,11 @@ int main(int argc, char *argv[])
   }
 
   cacheConf = build_config(argv[1]);
-  simulate(&cacheConf, argv[2]);
-  printf("Cache Sim!\n");
+  results = simulate(&cacheConf, argv[2]);
   
+  FILE *fp = fopen("out","w");
+  print_results(&cacheConf, results, fp);  
+  fclose(fp);
+
   return 0;
 }

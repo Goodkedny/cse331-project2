@@ -37,8 +37,8 @@ Index calculate_index(CacheConf *config, unsigned int address);
 /**
  * Prints the results of a simulation to a file
  *
+ * @param config, the configuration of the cache
  * @param results, the result of the simulation
  * @param fp, the file to print to
- * TODO: Write this function
  */
-void print_results(SimResult results, FILE *fp);
+void print_results(CacheConf *config, SimResult results, FILE *fp);

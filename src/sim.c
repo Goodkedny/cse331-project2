@@ -1,5 +1,23 @@
 #include "sim.h"
 
+void print_results(CacheConf *config, SimResult results, FILE *fp) 
+{
+  float total_hit_rate = (results.load_hit + results.store_hit)/(results.load_total + results.store_total);
+  float load_hit_rate = results.load_hit/results.load_total;
+  float store_hit_rate = results.store_hit/results.store_total;
+  
+  int store_misses = results.store_total - results.store_hit;
+  int load_misses = results.load_total - results.load_hit;
+  int total_miss_penalty = (store_misses + load_misses) * config->miss_penalty;
+
+  float average_memory_access_latency = (total_miss_penalty + results.load_hit + results.store_hit)/ (results.store_total + results.load_total);
+
+  fprintf(fp, "%f\n", total_hit_rate);
+  fprintf(fp, "%f\n", load_hit_rate);
+  fprintf(fp, "%f\n", store_hit_rate);
+  fprintf(fp, "%lu\n", results.instructions);
+  fprintf(fp, "%f\n", average_memory_access_latency);
+}
 
 SimResult simulate(CacheConf *config, char *trace) 
 {
