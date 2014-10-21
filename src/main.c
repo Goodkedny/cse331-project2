@@ -86,6 +86,7 @@ SimResult simulate(CacheConf *config, char *trace)
       result.instructions += config->miss_penalty;
     }
 
+    /*Add the instructions since last access and 1 for the access itself.*/
     result.instructions += inst_since_last + 1;
   }
 
