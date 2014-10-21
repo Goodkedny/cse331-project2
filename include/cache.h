@@ -73,3 +73,4 @@ int sim(Cache* cache, CacheConf *config, Tag tag, Index index, bool read);
 void replacement(Cache* cache, CacheConf *config, Tag tag, Index index);
 void random_replacement(Cache* cache, int slots, Tag tag);
 void FIFO_replacement(Cache* cache, int slots, Tag tag);
+
