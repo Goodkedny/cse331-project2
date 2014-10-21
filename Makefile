@@ -23,13 +23,13 @@
 
 # Compilers
 CC  = clang --std=c11
-CPP = clang++
+CPP = clang++ --std=c++11
 
 # Compiler Flags
 CFLAGS   = -g -Wall -Wextra
 CFLAGS  += $(FLAG)
-LIB       := -lm
-INC       := -I include
+LIB     := -lm
+INC     := -I include
 
 # Directories
 SRCDIR   := src
@@ -42,17 +42,18 @@ TEST     := $(TARGET)_test
 CSRCEXT  := c
 CPPSRCEXT:= cc
 SOURCES  := $(shell find $(SRCDIR) -type f -name *.$(CSRCEXT))
+SOURCES  := $(filter-out src/main.c, $(SOURCES))
 OBJECTS  := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(CSRCEXT)=.o))
 TESTSRC  := $(shell find $(TESTDIR) -type f -name *.$(CPPSRCEXT))
 TESTOBJ  := $(patsubst $(TESTDIR)/%,$(BUILDDIR)/$(TESTDIR)/%,$(TESTSRC:.$(CPPSRCEXT)=.o))
 DEP      := $(OBJECTS:%.o=%.d) $(TESTOBJ:%.o=%.d)
 
 # Google Test Framework variable
-GTEST_DIR     = lib/gtest-1.7.0
+GTEST_DIR     = lib/googletest
 GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
                 $(GTEST_DIR)/include/gtest/internal/*.h
 GTEST_SRCS_   = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
-CPPFLAGS     += -isystem $(GTEST_DIR)/include
+CPPFLAGS     += -isystem $(GTEST_DIR)/include -DGTEST_USE_OWN_TR1_TUPLE=1
 GTALL   = $(BUILDDIR)/test/gtest-all.o
 GTMAINO = $(BUILDDIR)/test/gtest_main.o
 GTMAINA = $(BUILDDIR)/test/gtest_main.a
@@ -63,7 +64,7 @@ GTA     = $(BUILDDIR)/test/gtest.a
 
 all: $(TARGET)
 
-$(TARGET): $(OBJECTS)
+$(TARGET): $(OBJECTS) $(BUILDDIR)/main.o
 	@echo " Linking..."
 	@mkdir -p $$(dirname $@)
 	$(CC) $^ -o $(TARGET) $(LIB)
@@ -71,13 +72,13 @@ $(TARGET): $(OBJECTS)
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(CSRCEXT)
 	@echo " Building $@..."
 	@mkdir -p $$(dirname $@)
-	$(CC) $(CPPFLAGS) $(INC) -c -o $@ -MD -MP -MF ${@:.o=.d} $<
+	$(CC) $(CFLAGS) $(INC) -c -o $@ -MD -MP -MF ${@:.o=.d} $<
 
 test: $(TEST)
 	@echo " Running tests..."
 	./$(TEST) $(TESTFLAGS)
 
-$(TEST): $(TESTOBJ) $(OBJECTS) $(GTMAINA) $(LEX) $(PARSER)
+$(TEST): $(TESTOBJ) $(OBJECTS) $(GTMAINA)
 	@echo " Linking test..."
 	@mkdir -p $$(dirname $@)
 	$(CPP) -lpthread $(LIB) $^ -o $@
