@@ -3,7 +3,7 @@
 #include "gtest/gtest.h"
 
 extern "C" {
-  #include "cache.h"
+  #include "sim.h"
 }
 
 
