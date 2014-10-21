@@ -4,7 +4,52 @@
 
 #include "cache.h"
 
-SimResult simulate(char *trace);
+Tag calculate_tag(CacheConf *config, unsigned int address);
+Index calculate_index(CacheConf *config, unsigned int address); 
+
+
+SimResult simulate(CacheConf *config, char *trace) 
+{
+  SimResult result;
+  Cache *cache = malloc(sizeof(Cache) * config->num_sets);
+
+  FILE *trace_file;
+  trace_file = fopen(trace, "r");
+
+  if (trace_file == NULL) {
+    fprintf(stderr, "Cannot open file.");
+    exit(1);
+  }
+
+  char buffer[100];
+  char inst_type;
+  unsigned int address;
+  int inst_since_last;
+  while(fgets(buffer, 100, trace_file)) {
+    sscanf(buffer, "%c %x %d", &inst_type, &address, &inst_since_last);
+    sim(cache, config, calculate_tag(config, address), 
+	calculate_index(config, address), inst_type == 'r');
+
+  }
+
+  fclose(trace_file);
+  free(cache);
+  return result;
+}
+
+Tag calculate_tag(CacheConf *config, unsigned int address) 
+{
+  return address >> (32 - config->tag_size);
+}
+
+Index calculate_index(CacheConf *config, unsigned int address) 
+{
+  for (unsigned i = 1 << (32 - config->tag_size); i < config->tag_size; i <<= 1) {
+    address ^= i;
+  }
+  
+  return address >> config->offset_bits;
+}
 
 
 int print_results(FILE *fp);
@@ -62,6 +107,7 @@ int main(int argc, char *argv[])
   }
 
   cacheConf = build_config(argv[1]);
+  simulate(&cacheConf, argv[2]);
   printf("Cache Sim!\n");
   
   return 0;
