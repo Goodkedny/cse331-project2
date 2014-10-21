@@ -1,3 +1,19 @@
+/*******************************************************************************
+/
+/  filename: main.c
+/  description: Main file to load and start the cache simulator.
+/
+/  Authors: Cecil, Tyler
+/           VanWhy, Randy
+/
+/  Class: CSE 331
+/  Instructor: Zheng
+/  Assignment: Lab Project 2
+/
+/  Assigned: October 2, 2014
+/  Due: October 22/ 2014
+/
+/******************************************************************************/
 #include "cache.h"
 #include "sim.h"
 
@@ -15,15 +31,25 @@ int main(int argc, char *argv[])
 
   cacheConf = build_config(argv[1]);
   results = simulate(&cacheConf, argv[2]);
+<<<<<<< HEAD
  
+=======
+
+
+>>>>>>> d1b1713616277eb84a8bd5be25dfab0448083454
   char *filename = malloc(strlen(argv[2]) + 5);
   sprintf(filename, "%s.out", argv[2]);
 
   FILE *fp = fopen(filename, "w");
+<<<<<<< HEAD
   fprintf(fp, argv[2]);
   fprintf(fp,",");
   print_results(&cacheConf, results, fp);  
   
+=======
+  print_results(&cacheConf, results, fp);
+
+>>>>>>> d1b1713616277eb84a8bd5be25dfab0448083454
   fclose(fp);
   free(filename);
 

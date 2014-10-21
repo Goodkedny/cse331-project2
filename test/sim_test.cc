@@ -90,11 +90,23 @@ namespace {
   }
 
   TEST_F(SimTest, WriteDirectWrite) {
+    config.associativity = 0;
+    config.set_size = 1;
+    config.write_allocate = true;
 
+    EXPECT_EQ(sim(cache, &config, tag, index, false), 1);
+    EXPECT_TRUE(cache[index].valid);
+    EXPECT_EQ(cache[index].tag, tag);
   }
 
   TEST_F(SimTest, WriteDirectNoWrite) {
+    config.associativity = 0;
+    config.set_size = 1;
+    config.write_allocate = false;
 
+    EXPECT_EQ(sim(cache, &config, tag, index, false), 1);
+    EXPECT_FALSE(cache[index].valid);
+    EXPECT_NE(cache[index].tag, tag);
   }
 
 } //Namespace
