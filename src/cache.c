@@ -1,3 +1,20 @@
+/*******************************************************************************
+/
+/  filename: cache.c
+/  description: Implementation file for cache.h. Implements the logic for the
+/               cache.
+/
+/  Authors: Cecil, Tyler
+/           VanWhy, Randy
+/
+/  Class: CSE 331
+/  Instructor: Zheng
+/  Assignment: Lab Project 2
+/
+/  Assigned: October 2, 2014
+/  Due: October 22/ 2014
+/
+/******************************************************************************/
 #include <stdlib.h>
 #include <stdbool.h>
 #include <stdio.h>

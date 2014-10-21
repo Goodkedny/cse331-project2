@@ -1,3 +1,21 @@
+/*******************************************************************************
+/
+/  filename: cache.h
+/  description: Interface functions for a simple cache simulator, includeing
+/               necessary structures and functions.
+/
+/  Authors: Cecil, Tyler
+/           VanWhy, Randy
+/
+/  Class: CSE 331
+/  Instructor: Zheng
+/  Assignment: Lab Project 2
+/
+/  Assigned: October 2, 2014
+/  Due: October 22/ 2014
+/
+/******************************************************************************/
+
 #pragma once
 
 #include <stdbool.h>

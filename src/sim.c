@@ -1,14 +1,31 @@
+/*******************************************************************************
+/
+/  filename: sim.c
+/  description: Implementation file for sim.h. Implements all io and the runtime
+/               for the cache.
+/
+/  Authors: Cecil, Tyler
+/           VanWhy, Randy
+/
+/  Class: CSE 331
+/  Instructor: Zheng
+/  Assignment: Lab Project 2
+/
+/  Assigned: October 2, 2014
+/  Due: October 22/ 2014
+/
+/******************************************************************************/
 #include "sim.h"
 
-void print_results(CacheConf *config, SimResult results, FILE *fp) 
+void print_results(CacheConf *config, SimResult results, FILE *fp)
 {
   unsigned long total_memory_accesses = results.load_total + results.store_total;
-  unsigned long total_hits = results.load_hit + results.store_hit;  
+  unsigned long total_hits = results.load_hit + results.store_hit;
   unsigned long store_misses = results.store_total - results.store_hit;
   unsigned long load_misses = results.load_total - results.load_hit;
   unsigned long total_miss_penalty = (store_misses + load_misses) * config->miss_penalty;
 
-  
+
   float total_hit_rate = (float) total_hits / total_memory_accesses;
   float load_hit_rate = (float) results.load_hit / (float) results.load_total;
   float store_hit_rate = (float) results.store_hit / results.store_total;
@@ -21,7 +38,7 @@ void print_results(CacheConf *config, SimResult results, FILE *fp)
   fprintf(fp, "%f\n", average_memory_access_latency);
 }
 
-SimResult simulate(CacheConf *config, char *trace) 
+SimResult simulate(CacheConf *config, char *trace)
 {
   /*2-4-6-8 Show me how you simultate!*/
   SimResult result;
@@ -47,7 +64,7 @@ SimResult simulate(CacheConf *config, char *trace)
   unsigned int address;
   int inst_since_last;
   int sim_result;
-    
+
 
   char buffer[100];
   while(fgets(buffer, 100, trace_file)) {
@@ -55,9 +72,9 @@ SimResult simulate(CacheConf *config, char *trace)
     sscanf(buffer, "%c %x %d", &inst_type, &address, &inst_since_last);
 
     /*Calculate the tag and the index and simulate the instruction*/
-    sim_result = sim(cache, config, calculate_tag(config, address), 
+    sim_result = sim(cache, config, calculate_tag(config, address),
 		     calculate_index(config, address), inst_type == 'l');
-    
+
     /*Add the result of the instruction to the count*/
     if (inst_type == 'l') {
       result.load_hit += (1 - sim_result);
@@ -67,7 +84,7 @@ SimResult simulate(CacheConf *config, char *trace)
       result.store_hit += (1 - sim_result);
       result.store_total++;
     }
-    
+
     /*Add the miss penalty*/
     if (sim_result) {
       result.instructions += config->miss_penalty;
@@ -82,12 +99,12 @@ SimResult simulate(CacheConf *config, char *trace)
   return result;
 }
 
-Tag calculate_tag(CacheConf *config, unsigned int address) 
+Tag calculate_tag(CacheConf *config, unsigned int address)
 {
   return address >> (32 - config->tag_size);
 }
 
-Index calculate_index(CacheConf *config, unsigned int address) 
+Index calculate_index(CacheConf *config, unsigned int address)
 {
   address <<= config->tag_size;
   return address >> (config->offset_bits + config->tag_size);
@@ -126,5 +143,3 @@ CacheConf build_config(char *config)
   fclose(config_file);
   return configuration;
 }
-
-

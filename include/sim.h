@@ -1,4 +1,22 @@
+/*******************************************************************************
+/
+/  filename: sim.h
+/  description: Interface for the simulation environment. This includes the
+/               actual "simulate" function, as well as all IO facilities.
+/
+/  Authors: Cecil, Tyler
+/           VanWhy, Randy
+/
+/  Class: CSE 331
+/  Instructor: Zheng
+/  Assignment: Lab Project 2
+/
+/  Assigned: October 2, 2014
+/  Due: October 22/ 2014
+/
+/******************************************************************************/
 #pragma once
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -32,7 +50,7 @@ Tag calculate_tag(CacheConf *config, unsigned int address);
  * @param address, the address to extract the index from.
  * @return the index
  */
-Index calculate_index(CacheConf *config, unsigned int address); 
+Index calculate_index(CacheConf *config, unsigned int address);
 
 /**
  * Prints the results of a simulation to a file
