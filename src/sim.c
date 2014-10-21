@@ -63,9 +63,8 @@ Tag calculate_tag(CacheConf *config, unsigned int address)
 
 Index calculate_index(CacheConf *config, unsigned int address) 
 {
-  address <<= config->tag_size
-  
-  return address >> config->offset_bits + config->tag_size;
+  address <<= config->tag_size;
+  return address >> (config->offset_bits + config->tag_size);
 }
 
 CacheConf build_config(char *config)
