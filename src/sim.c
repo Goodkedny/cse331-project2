@@ -31,10 +31,10 @@ void print_results(CacheConf *config, SimResult results, FILE *fp)
   float store_hit_rate = (float) results.store_hit / results.store_total;
   float average_memory_access_latency = (float) (total_miss_penalty + total_hits)/ total_memory_accesses;
 
-  fprintf(fp, "%f,", total_hit_rate);
-  fprintf(fp, "%f,", load_hit_rate);
-  fprintf(fp, "%f,", store_hit_rate);
-  fprintf(fp, "%lu,", results.instructions);
+  fprintf(fp, "%f\n", total_hit_rate);
+  fprintf(fp, "%f\n", load_hit_rate);
+  fprintf(fp, "%f\n", store_hit_rate);
+  fprintf(fp, "%lu\n", results.instructions);
   fprintf(fp, "%f\n", average_memory_access_latency);
 }
 

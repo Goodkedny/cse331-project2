@@ -37,8 +37,7 @@ int main(int argc, char *argv[])
 
   FILE *fp = fopen(filename, "w");
 
-  fprintf(fp, argv[2]);
-  fprintf(fp,",");
+
   print_results(&cacheConf, results, fp);  
 
   fclose(fp);
