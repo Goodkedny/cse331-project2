@@ -3,12 +3,12 @@
 
 #include "cache.h"
 
-bool is_hit (Cache* cache, bool direct_mapped, int slots, Tag tag, Index index)
-{
+bool is_hit (Cache* cache, bool direct_mapped, int setsize, Tag tag,
+             Index index) {
   if(direct_mapped) {
     return is_hit_direct(cache, tag, index);
   } else {
-    return is_hit_associative(cache, slots, tag);
+    return is_hit_associative(cache, setsize, tag, index);
   }
 }
 
@@ -17,11 +17,11 @@ bool is_hit_direct(Cache* cache, Tag tag, Index index) {
   return (cache[index].tag == tag) && cache[index].valid;
 }
 
-bool is_hit_associative(Cache* cache, int slots, Tag tag) {
+bool is_hit_associative(Cache* cache, int setsize, Tag tag, Index index) {
   /* Searches through all cache blocks. */
-  for(int i = 0; i < slots; i++)
+  for(int i = 0; i < setsize; i++)
   {
-    if(cache[i].tag == tag && cache[i].valid){
+    if(cache[index + i].tag == tag && cache[index + i].valid){
       return true;
     }
   }
@@ -51,24 +51,24 @@ void replacement(Cache* cache, CacheConf *config, Tag tag, Index index) {
   }
 
   if(config->replacement_policy) {
-    FIFO_replacement(cache, config->num_sets, tag);
+    FIFO_replacement(cache, config->num_sets, tag, index);
   } else {
-    random_replacement(cache, config->num_sets, tag);
+    random_replacement(cache, config->num_sets, tag, index);
   }
 }
 
-void random_replacement(Cache* cache, int slots, Tag tag) {
-  unsigned int index = rand() % slots;
+void random_replacement(Cache* cache, int setsize, Tag tag, Index index) {
+  unsigned int offset = rand() % setsize;
 
-  cache[index].tag = tag;
-  cache[index].valid = true;
+  cache[index + offset].tag = tag;
+  cache[index + offset].valid = true;
 }
 
-void FIFO_replacement(Cache* cache, int slots, Tag tag) {
+void FIFO_replacement(Cache* cache, int setsize, Tag tag, Index index) {
   static unsigned int count = 0;
 
-  cache[count].tag = tag;
-  cache[count].valid = true;
+  cache[index + count].tag = tag;
+  cache[index + count].valid = true;
 
-  count = (count + 1) % slots;
+  count = (count + 1) % setsize;
 }

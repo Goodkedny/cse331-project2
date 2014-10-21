@@ -36,13 +36,15 @@ typedef struct {
  *
  * @param cache Array of cache slots to be queried.
  * @param direct_mapped Flaggs whether this is a direct or associative lookup.
- * @param slots Number of slots in the cache.
+ * @param blocks Number of blocks in the cache.
+ * @param sets Number of sets of blocks in the cache (used for associative)
  * @param tag Tag used to check if the content in a slot is the desired content.
  * @param index The direct index to use if cache is mapped.
  *
  * @return If the memory was in cache or not.
  */
-bool is_hit(Cache* cache, bool direct_mapped, int slots, Tag tag, Index index);
+bool is_hit(Cache* cache, bool direct_mapped, int setsize, Tag tag,
+            Index index);
 
 /**
  * Like `is_hit` but used for direct-mapped cache. Called by `is_hit`.
@@ -59,17 +61,17 @@ bool is_hit_direct(Cache* cache, Tag tag, Index index);
  * Like `is_hit` but used for fully associative cache. Called by `is_hit`.
  *
  * @param cache Array of cache slots to be queried.
- * @param slots The length of cache.
+ * @param setsize The length of cache block set.
  * @param tag Tag used to check if the content in a slot is the desired content.
  *
  * @return If the memory was in cache or not.
  */
-bool is_hit_associative(Cache* cache, int slots, Tag tag);
+bool is_hit_associative(Cache* cache, int setsize, Tag tag, Index index);
 
 /**
  *
  */
 int sim(Cache* cache, CacheConf *config, Tag tag, Index index, bool read);
 void replacement(Cache* cache, CacheConf *config, Tag tag, Index index);
-void random_replacement(Cache* cache, int slots, Tag tag);
-void FIFO_replacement(Cache* cache, int slots, Tag tag);
+void random_replacement(Cache* cache, int setsize, Tag tag, Index index);
+void FIFO_replacement(Cache* cache, int setsize, Tag tag, Index index);
