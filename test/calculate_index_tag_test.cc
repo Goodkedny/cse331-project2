@@ -8,17 +8,17 @@ extern "C" {
 
 
 namespace {
-  
-  TEST(TagTest) {
+
+  TEST(CalculateTests, TagTest) {
     CacheConf conf;
     conf.tag_size = 8;
-    ASSERT_EQ(0xFF, calculate_tag(&conf, 0xFFCCCCCC));
+    EXPECT_EQ(0xFF, calculate_tag(&conf, 0xFFCCCCCC));
   }
-  
-  TEST(IndexTest) {
+
+  TEST(CalculateTests, IndexTest) {
     CacheConf conf;
     conf.tag_size = 8;
     conf.offset_bits = 16;
-    ASSERT_EQ(0xDD, calculate_index(&conf, 0xFFDDCCCC));
+    EXPECT_EQ(0xDD, calculate_index(&conf, 0xFFDDCCCC));
   }
 }
